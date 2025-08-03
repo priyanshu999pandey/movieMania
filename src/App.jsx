@@ -15,7 +15,7 @@ import Footer from "./components/Footer"
 function App() {
 
   const dispatch =useDispatch();
-
+  // Adding comment
   const fetchTrendingData = async()=>{
     try{
 
