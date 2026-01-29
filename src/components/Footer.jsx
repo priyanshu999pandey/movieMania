@@ -62,8 +62,8 @@ const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-white/10 mt-10 pt-6 text-center text-xs sm:text-sm">
           <p>
-            © {new Date().getFullYear()} Movieo. Made with{" "}
-            <FaHeart className="inline text-red-500 mx-1" /> by Priyanshu Pandey
+            © {new Date().getFullYear()} Movie Mania Made by {" "}
+              <span className="text-yellow-400 underline">Priyanshu Pandey</span>
           </p>
         </div>
 
