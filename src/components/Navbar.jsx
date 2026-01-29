@@ -41,7 +41,7 @@ const Navbar = () => {
   const submitHandler = (e) => e.preventDefault();
 
   return (
-    <div className="fixed top-0 w-full h-16 bg-neutral-800 opacity-90 flex items-center z-20 px-1 lg:10 md:8">
+    <div className="fixed top-0 w-full h-16 bg-neutral-800 opacity-90 flex items-center z-20 px-2 lg:10 md:8">
 
       {/* logo */}
      <NavLink to="/" className="group select-none">
