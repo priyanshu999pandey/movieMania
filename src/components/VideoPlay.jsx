@@ -31,19 +31,33 @@ const VideoPlay = ({ close, media_type, id }) => {
         </button>
 
         {/* Video / Fallback */}
-        {videoKey ? (
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${videoKey}?autoplay=1`}
-            title="Trailer"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-white text-lg">
-            Trailer not available 😢
-          </div>
-        )}
+       {videoKey ? (
+  <iframe
+    className="w-full h-full"
+    src={`https://www.youtube.com/embed/${videoKey}?autoplay=1`}
+    title="Trailer"
+    allow="autoplay; encrypted-media"
+    allowFullScreen
+  />
+) : (
+  <div className="flex flex-col items-center justify-center h-full text-white bg-black/60">
+
+    {/* Spinner */}
+    <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mb-4" />
+
+    {/* Text */}
+    <p className="text-lg sm:text-xl font-semibold tracking-wide text-red-400 animate-pulse">
+      Loading trailer...
+    </p>
+
+    {/* Sub text */}
+    <p className="text-xs text-gray-400 mt-2">
+      Please wait, preparing cinematic experience 🎬
+    </p>
+
+  </div>
+)}
+
       </div>
     </div>
   )

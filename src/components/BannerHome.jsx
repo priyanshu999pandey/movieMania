@@ -1,39 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import VideoPlay from "./VideoPlay";
 
 const BannerHome = () => {
   const bannerData = useSelector((state) => state.movieoData.bannerData);
   const imageURL = useSelector((state) => state.movieoData.imageURL);
-  const [playVideo,setPlayVideo] = useState(false)
 
+  const [playVideo, setPlayVideo] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
   const nextHandler = () => {
     setCurrentImage((prev) => (prev + 1) % bannerData.length);
   };
 
-  const previousHandler = () => {
-    setCurrentImage((prev) => (prev === 0 ? bannerData.length - 1 : prev - 1));
-  };
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextHandler();
-    }, 5000);
+    if (!bannerData.length) return;
+
+    const interval = setInterval(nextHandler, 5000);
     return () => clearInterval(interval);
   }, [currentImage, bannerData.length]);
-  
+
   return (
-    <div className="relative w-full overflow-hidden h-[80vh] sm:h-[90vh] md:h-screen">
+    <div className="relative w-full overflow-hidden h-[60vh] md:h-[60vh] lg:h-[80vh]">
+
+      {/* Slider */}
       <div
         className="flex transition-transform duration-700 ease-in-out h-full"
         style={{ transform: `translateX(-${currentImage * 100}%)` }}
       >
         {bannerData.map((data, index) => (
           <div key={index} className="min-w-full h-full relative">
-            {/* Image */}
+
+            {/* Background Image */}
             <img
               src={imageURL + data.backdrop_path}
               alt="Banner"
@@ -41,52 +39,41 @@ const BannerHome = () => {
             />
 
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/90 to-transparent z-0 pointer-events-none" />
-
-            {/* Navigation Buttons */}
-            <div className="absolute top-0 z-10 hidden sm:flex items-center justify-between w-full h-full px-4 group-hover:flex">
-              <button
-                onClick={previousHandler}
-                className="bg-gray-300 text-white p-2 sm:p-3 rounded-full cursor-pointer hover:bg-white hover:text-black transition-all duration-300"
-              >
-                <FaAngleLeft className="w-4 h-4 sm:w-6 sm:h-6" />
-              </button>
-              <button
-                onClick={nextHandler}
-                className="bg-gray-300 text-white p-2 sm:p-3 rounded-full cursor-pointer hover:bg-white hover:text-black transition-all duration-300"
-              >
-                <FaAngleRight className="w-4 h-4 sm:w-6 sm:h-6" />
-              </button>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-0" />
 
             {/* Text Content */}
-            <div className="absolute bottom-8 left-4 sm:left-6 md:left-10 md:mb-10 text-white z-10 max-w-[90%]  sm:max-w-[75%] md:max-w-md">
-              <h2 className="font-bold text-xl sm:text-2xl md:text-4xl lg:text-5xl mb-4">
+            <div className="absolute bottom-6 left-4 sm:left-6 md:left-10 z-10 max-w-[95%] sm:max-w-[80%] md:max-w-xl text-white">
+
+              {/* Title */}
+              <h2 className="font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-3 leading-tight drop-shadow-[0_3px_6px_rgba(0,0,0,0.8)]">
                 {data.media_type === "tv" ? data.name : data.title}
               </h2>
-              <p className="text-sm sm:text-base md:text-lg line-clamp-3 mb-2">
+
+              {/* Meta Info */}
+              <div className="flex items-center gap-3 mb-3 text-sm sm:text-base">
+                <span className="bg-yellow-500/90 text-black px-3 py-1 rounded-full font-semibold shadow-md">
+                  ⭐ {data.vote_average.toFixed(1)}
+                </span>
+
+                <span className="bg-white/20 px-3 py-1 rounded-full uppercase text-xs tracking-wider">
+                  {data.media_type}
+                </span>
+              </div>
+
+              {/* Overview */}
+              <p className="text-gray-200 text-sm sm:text-base md:text-lg line-clamp-3 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
                 {data.overview}
               </p>
-              <p className="text-sm sm:text-base mb-3">
-                Rating: {data.vote_average.toFixed(1)}
-              </p>
-              <button
-                onClick={() => setPlayVideo(true)}
-                className="mt-2 text-sm sm:text-base bg-white py-2 px-4 text-black rounded-sm hover:text-white bg-gradient-to-l hover:from-neutral-500 hover:to-red-900 transition-all duration-300"
-              >
-                Play Now
-              </button>
+
             </div>
           </div>
         ))}
       </div>
 
-      {
-         playVideo && <VideoPlay close={setPlayVideo}></VideoPlay>
-      }
+      {/* Video Modal */}
+      {playVideo && <VideoPlay close={setPlayVideo} />}
     </div>
   );
-
 };
 
 export default BannerHome;

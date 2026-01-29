@@ -21,7 +21,7 @@ function App() {
 
       const response = await axios.get("/trending/all/week");
       dispatch(setBannerData(response?.data?.results))
-      // console.log(response.data.results);
+      console.log(response.data.results);
 
     }catch(err){
       console.log("error in fetching : ",err)
@@ -61,9 +61,9 @@ function App() {
       </Routes>
       </div>
 
-      {/* <div className="">
+      <div className="">
         <Footer></Footer>
-      </div> */}
+      </div>
 
       <div className="lg:hidden">
         

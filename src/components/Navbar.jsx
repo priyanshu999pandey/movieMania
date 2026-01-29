@@ -41,17 +41,49 @@ const Navbar = () => {
   const submitHandler = (e) => e.preventDefault();
 
   return (
-    <div className="fixed top-0 w-full h-16 bg-neutral-800 opacity-90 flex items-center z-20 px-15">
+    <div className="fixed top-0 w-full h-16 bg-neutral-800 opacity-90 flex items-center z-20 px-10">
 
       {/* logo */}
-      <NavLink to="/">
-        <div className="flex">
-          <img src={logo} alt="logo" width={120} />
-          <span className="pt-2 text-yellow-500 text-sm px-1">
-            <span className="text-red-300">M</span>ANIA
-          </span>
-        </div>
-      </NavLink>
+     <NavLink to="/" className="group select-none">
+  <div
+    className="
+      relative flex items-center gap-2 px-4 py-1.5
+      rounded-full
+      bg-gradient-to-b from-red-500 via-red-700 to-red-900
+      shadow-[inset_0_1px_3px_rgba(255,255,255,0.25),0_6px_14px_rgba(0,0,0,0.6)]
+      overflow-hidden
+      transition-transform duration-300
+      group-hover:scale-105
+    "
+  >
+    {/* Cylindrical highlight */}
+    <span className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/25 to-transparent opacity-40 pointer-events-none" />
+
+    {/* Reflection sweep */}
+    <span className="absolute -left-1/2 top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 group-hover:animate-slide" />
+
+    {/* Subtle glow */}
+    <span className="absolute -inset-1 rounded-full bg-red-500/40 blur-md opacity-0 group-hover:opacity-100 transition duration-300" />
+
+    {/* MOVIE */}
+    <h1
+      className="
+        relative text-lg sm:text-xl font-black tracking-wider
+        bg-gradient-to-r from-white via-yellow-200 to-yellow-400
+        bg-clip-text text-transparent
+        drop-shadow-[0_0_6px_rgba(255,200,100,0.7)]
+      "
+    >
+      MOVIE
+    </h1>
+
+    {/* MANIA */}
+    <span className="relative text-[10px] sm:text-xs font-extrabold text-yellow-200 -mt-1 tracking-[0.25em]">
+      <span className="text-white">M</span>ANIA
+    </span>
+  </div>
+</NavLink>
+
 
       {/* category links */}
       <div className="hidden lg:flex gap-2 px-8">

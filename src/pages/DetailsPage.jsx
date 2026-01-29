@@ -1,149 +1,146 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useFetchDetails from "../hooks/useFetchDetails.jsx";
 import { useSelector } from "react-redux";
-import Divider from "../components/Divider";
+import useFetchDetails from "../hooks/useFetchDetails.jsx";
 import useFetch from "../hooks/useFetch";
+import Divider from "../components/Divider";
 import HorizontalScroll from "../components/HorizontalScroll";
-import { useEffect } from "react";
 import VideoPlay from "../components/VideoPlay.jsx";
 
 const DetailsPage = () => {
   const imageURL = useSelector((s) => s.movieoData.imageURL);
-
   const params = useParams();
-  console.log(params);
-  useEffect(() => {
-  window.scrollTo(0, 0); // ⬅️ Scroll to top when ID changes
-}, [params.id]);
 
-  const { data }  = useFetchDetails(`/${params.explore}/${params.id}`);
+  const { data } = useFetchDetails(`/${params.explore}/${params.id}`);
   const { data: character } = useFetchDetails(`/${params.explore}/${params.id}/credits`);
   const { data: similar } = useFetch(`${params.explore}/${params.id}/similar`);
-  const { data: recs }      = useFetch(`${params.explore}/${params.id}/recommendations`);
+  const { data: recs } = useFetch(`${params.explore}/${params.id}/recommendations`);
 
-  const genre    = data?.genres ?? [];
+  const genre = data?.genres ?? [];
   const duration = Number(data?.runtime / 60).toFixed(1);
-  const [playVideo,setPlayVideo] = useState(false);
-  const [playVideoId,setPlayVideoId] = useState(params.id)
-  console.log("video id",playVideoId);
+
+  const [playVideo, setPlayVideo] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [params.id]);
 
   return (
-    <div className="relative w-full z-10 ">
-      {/* ───────────────────────────────── Backdrop ─────────────────────────────── */}
-      <div className="relative">
+    <div className="relative w-full text-white">
+
+      {/* ───── Backdrop ───── */}
+      <div className="relative h-[45vh] md:h-[60vh]">
         <img
           src={imageURL + data?.backdrop_path}
-          className="w-full h-[300px] object-cover opacity-40"
+          className="w-full h-full object-cover"
           alt=""
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent h-[300px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
       </div>
 
-      {/* ───────────────────────────── Poster + Details wrapper ─────────────────── */}
-      {/* lg: keep your original overlay • md/sm: horizontal flex  */}
-      <div className="flex flex-col md:flex-row gap-6 px-5 lg:block">
+      {/* ───── Main Info Section ───── */}
+      <div className="relative z-10 px-4 md:px-10 -mt-40 flex flex-col md:flex-row gap-8">
+
         {/* Poster */}
-        <div
-          className="
-            relative mx-auto
-            md:mx-0
-            lg:absolute lg:top-40 lg:left-17
-           
-          "
-        >
+        <div className="flex-shrink-0 mx-auto md:mx-0">
           <img
             src={imageURL + data?.poster_path}
-            className="
-              w-40  h-60
-              sm:w-48 sm:h-72
-              md:w-56 md:h-80
-              lg:w-70 lg:h-90
-              object-cover rounded-lg
-            "
-            
+            className="w-48 md:w-64 rounded-xl shadow-2xl"
+            alt=""
           />
-           <button className="w-49 mt-2  bg-white py-2 px-4 text-black rounded-sm hover:text-white bg-gradient-to-l hover:from-neutral-500 hover:to-red-900 transition-all duration-300 lg:w-70" onClick={()=>setPlayVideo(true)}>
-            Play Now
+
+          <button
+            onClick={() => setPlayVideo(true)}
+            className="mt-4 w-full bg-gradient-to-r from-red-600 to-red-800 py-2 rounded-lg font-semibold hover:scale-105 transition"
+          >
+            ▶ Play Trailer
           </button>
-         
         </div>
-        
 
-        {/* Text details */}
-        <div className="text-white flex-1 lg:ml-95 mt-6 md:mt-0">
-          <div>
-            <p className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-              {data?.title || data?.name}
-            </p>
-            <p className="text-gray-600 text-sm sm:text-base">{data?.tagline}</p>
-          </div>
-          <Divider />
+        {/* Details */}
+        <div className="flex-1 backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-5 md:p-8 shadow-xl">
 
-          <div className="flex flex-wrap gap-4 sm:gap-6 text-gray-600 text-sm sm:text-base">
-            <p>Rating : {Number(data?.vote_average).toFixed(1)}+</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
+            {data?.title || data?.name}
+          </h1>
+
+          <p className="text-gray-400 italic mb-4">{data?.tagline}</p>
+
+          <div className="flex flex-wrap gap-4 text-sm md:text-base text-gray-300 mb-4">
+            <span>⭐ {Number(data?.vote_average).toFixed(1)}</span>
             <span>|</span>
-            <p>
+            <span>
               {data?.runtime
-                ? `Duration : ${duration} hrs`
-                : `Seasons : ${data?.number_of_seasons}`}
-            </p>
+                ? `${duration} hrs`
+                : `${data?.number_of_seasons} Seasons`}
+            </span>
             <span>|</span>
-            <p>Status : {data?.status}</p>
+            <span>{data?.status}</span>
           </div>
+
           <Divider />
 
-          <div>
-            <p className="text-lg sm:text-xl">Overview</p>
-            <p className="text-gray-600 text-sm sm:text-base">{data?.overview}</p>
-          </div>
+          <p className="text-lg font-semibold mb-1">Overview</p>
+          <p className="text-gray-300 leading-relaxed mb-4">{data?.overview}</p>
+
           <Divider />
 
-          <div className="flex flex-wrap gap-3 text-gray-600 text-sm sm:text-base">
-            <span>Genre :</span>
+          <div className="flex flex-wrap gap-2 text-sm text-gray-300">
+            <span className="font-semibold text-white">Genres:</span>
             {genre.map((g) => (
-              <p key={g.id}>{g.name}</p>
+              <span key={g.id} className="bg-white/10 px-3 py-1 rounded-full">
+                {g.name}
+              </span>
             ))}
           </div>
-          <Divider />
+
         </div>
       </div>
 
-      {/* ────────────────────────────────── Cast ───────────────────────────────── */}
-      <div className="px-5 lg:pl-100 py-6">
-        <p className="text-xl font-bold text-white mb-3">Cast :</p>
-        <div className="flex flex-wrap gap-6">
+      {/* ───── Cast ───── */}
+      <div className="px-4 md:px-10 mt-12">
+        <h2 className="text-xl font-bold mb-4">Cast</h2>
+
+        <div className="flex gap-5 overflow-x-auto scrollbar-hide pb-3">
           {character?.cast
             ?.filter((c) => c.profile_path)
+            .slice(0, 15)
             .map((c) => (
-              <img
-                key={c.id}
-                src={imageURL + c.profile_path}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                alt=""
-              />
+              <div key={c.id} className="text-center min-w-[80px]">
+                <img
+                  src={imageURL + c.profile_path}
+                  className="w-20 h-20 rounded-full object-cover mx-auto mb-2 border border-white/20"
+                  alt=""
+                />
+                <p className="text-xs text-gray-300 line-clamp-1">{c.name}</p>
+              </div>
             ))}
         </div>
       </div>
 
       <Divider />
 
-      {/* ─────────────────────── Similar & Recommended rows ───────────────────── */}
+      {/* ───── Similar & Recommendations ───── */}
       <HorizontalScroll
         data={similar}
         heading={`Similar ${params.explore}`}
         media_type={params.explore}
       />
+
       <HorizontalScroll
         data={recs}
         heading={`Recommended ${params.explore}`}
         media_type={params.explore}
       />
 
-      {
-        playVideo &&  <VideoPlay close={setPlayVideo} media_type={params?.explore} id={playVideoId} ></VideoPlay>
-      }
-     
+      {/* ───── Video Modal ───── */}
+      {playVideo && (
+        <VideoPlay
+          close={setPlayVideo}
+          media_type={params.explore}
+          id={params.id}
+        />
+      )}
     </div>
   );
 };
