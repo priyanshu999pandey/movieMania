@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import VideoPlay from "./VideoPlay";
 
 const BannerHome = () => {
   const bannerData = useSelector((state) => state.movieoData.bannerData);
   const imageURL = useSelector((state) => state.movieoData.imageURL);
+  const [playVideo,setPlayVideo] = useState(false)
 
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -22,7 +24,7 @@ const BannerHome = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, [currentImage, bannerData.length]);
-
+  
   return (
     <div className="relative w-full overflow-hidden h-[80vh] sm:h-[90vh] md:h-screen">
       <div
@@ -69,7 +71,7 @@ const BannerHome = () => {
                 Rating: {data.vote_average.toFixed(1)}
               </p>
               <button
-                onClick={() => console.log("Play Now clicked")}
+                onClick={() => setPlayVideo(true)}
                 className="mt-2 text-sm sm:text-base bg-white py-2 px-4 text-black rounded-sm hover:text-white bg-gradient-to-l hover:from-neutral-500 hover:to-red-900 transition-all duration-300"
               >
                 Play Now
@@ -78,8 +80,13 @@ const BannerHome = () => {
           </div>
         ))}
       </div>
+
+      {
+         playVideo && <VideoPlay close={setPlayVideo}></VideoPlay>
+      }
     </div>
   );
+
 };
 
 export default BannerHome;

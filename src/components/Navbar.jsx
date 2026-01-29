@@ -41,7 +41,7 @@ const Navbar = () => {
   const submitHandler = (e) => e.preventDefault();
 
   return (
-    <div className="fixed top-0 w-full h-16 bg-neutral-800 opacity-80 flex items-center z-40 px-15">
+    <div className="fixed top-0 w-full h-16 bg-neutral-800 opacity-90 flex items-center z-20 px-15">
 
       {/* logo */}
       <NavLink to="/">

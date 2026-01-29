@@ -10,23 +10,26 @@ import VideoPlay from "../components/VideoPlay.jsx";
 
 const DetailsPage = () => {
   const imageURL = useSelector((s) => s.movieoData.imageURL);
-  const params    = useParams();
+
+  const params = useParams();
+  console.log(params);
   useEffect(() => {
   window.scrollTo(0, 0); // ⬅️ Scroll to top when ID changes
 }, [params.id]);
 
   const { data }  = useFetchDetails(`/${params.explore}/${params.id}`);
   const { data: character } = useFetchDetails(`/${params.explore}/${params.id}/credits`);
-  const { data: similar }   = useFetch(`${params.explore}/${params.id}/similar`);
+  const { data: similar } = useFetch(`${params.explore}/${params.id}/similar`);
   const { data: recs }      = useFetch(`${params.explore}/${params.id}/recommendations`);
 
   const genre    = data?.genres ?? [];
   const duration = Number(data?.runtime / 60).toFixed(1);
   const [playVideo,setPlayVideo] = useState(false);
-  const [playVideoId,setPlayVideoId] = useState('')
+  const [playVideoId,setPlayVideoId] = useState(params.id)
+  console.log("video id",playVideoId);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-10 ">
       {/* ───────────────────────────────── Backdrop ─────────────────────────────── */}
       <div className="relative">
         <img
@@ -60,7 +63,7 @@ const DetailsPage = () => {
             "
             
           />
-           <button className="w-49 mt-2  bg-white py-2 px-4 text-black rounded-sm hover:text-white bg-gradient-to-l hover:from-neutral-500 hover:to-red-900 transition-all duration-300 lg:w-70">
+           <button className="w-49 mt-2  bg-white py-2 px-4 text-black rounded-sm hover:text-white bg-gradient-to-l hover:from-neutral-500 hover:to-red-900 transition-all duration-300 lg:w-70" onClick={()=>setPlayVideo(true)}>
             Play Now
           </button>
          
@@ -137,7 +140,10 @@ const DetailsPage = () => {
         media_type={params.explore}
       />
 
-      {/* <VideoPlay></VideoPlay> */}
+      {
+        playVideo &&  <VideoPlay close={setPlayVideo} media_type={params?.explore} id={playVideoId} ></VideoPlay>
+      }
+     
     </div>
   );
 };
