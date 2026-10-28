@@ -13,8 +13,8 @@ const DetailsPage = () => {
 
   const { data } = useFetchDetails(`/${params.explore}/${params.id}`);
   const { data: character } = useFetchDetails(`/${params.explore}/${params.id}/credits`);
-  const { data: similar } = useFetch(`${params.explore}/${params.id}/similar`);
-  const { data: recs } = useFetch(`${params.explore}/${params.id}/recommendations`);
+  const { data: similar, loading: similarLoading } = useFetch(`${params.explore}/${params.id}/similar`);
+  const { data: recs, loading: recsLoading } = useFetch(`${params.explore}/${params.id}/recommendations`);
 
   const genre = data?.genres ?? [];
   const duration = Number(data?.runtime / 60).toFixed(1);
@@ -123,12 +123,14 @@ const DetailsPage = () => {
       {/* ───── Similar & Recommendations ───── */}
       <HorizontalScroll
         data={similar}
+        loading={similarLoading}
         heading={`Similar ${params.explore}`}
         media_type={params.explore}
       />
 
       <HorizontalScroll
         data={recs}
+        loading={recsLoading}
         heading={`Recommended ${params.explore}`}
         media_type={params.explore}
       />

@@ -9,16 +9,14 @@ const BannerHome = () => {
   const [playVideo, setPlayVideo] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  const nextHandler = () => {
-    setCurrentImage((prev) => (prev + 1) % bannerData.length);
-  };
-
   useEffect(() => {
     if (!bannerData.length) return;
 
-    const interval = setInterval(nextHandler, 5000);
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % bannerData.length);
+    }, 5000);
     return () => clearInterval(interval);
-  }, [currentImage, bannerData.length]);
+  }, [bannerData.length]);
 
   return (
     <div className="relative w-full overflow-hidden h-[60vh] md:h-[60vh] lg:h-[80vh]">

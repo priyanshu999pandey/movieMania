@@ -4,20 +4,25 @@ import axios from "axios"
 const useFetchDetails=(endpoint)=>{
 
       const [data,setData] = useState([])
-      const [loading,setLoading] = useState(false)
-
-      const fetchData = async()=>{
-        try{
-            const response = await axios.get(endpoint)
-           
-             setData(response.data)
-        }catch(err){
-          console.log(err)
-        }
-    }
+      const [loading,setLoading] = useState(true)
 
       useEffect( ()=>{
-        fetchData();       
+        const controller = new AbortController()
+
+        const fetchData = async()=>{
+          setLoading(true)
+          try{
+            const response = await axios.get(endpoint, { signal: controller.signal })
+            setData(response.data)
+          }catch(err){
+            if (err.name !== "CanceledError") console.log(err)
+          }finally{
+            if (!controller.signal.aborted) setLoading(false)
+          }
+        }
+
+        fetchData()
+        return () => controller.abort()
       },[endpoint])
 
       return{data,loading}

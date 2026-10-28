@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import Card from "./Card";
+import SkeletonCard from "./SkeletonCard";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
-const HorizontalScroll = ({ data, heading, media_type, trending }) => {
+const HorizontalScroll = ({ data, heading, media_type, trending, loading = false }) => {
   const imageURL = useSelector((state) => state.movieoData.imageURL);
   const containerRef = useRef(null);
 
@@ -36,16 +37,20 @@ const HorizontalScroll = ({ data, heading, media_type, trending }) => {
         ref={containerRef}
         className="flex gap-6 md:gap-8 overflow-x-scroll scrollbar-hide scroll-smooth pb-4"
       >
-        {data.map((item, index) => (
-          <Card
-            key={index}
-            data={item}
-            imageURL={imageURL}
-            index={index + 1}
-            trending={trending}
-            media_type={media_type}
-          />
-        ))}
+        {loading
+          ? Array.from({ length: 6 }, (_, index) => (
+              <SkeletonCard key={index} />
+            ))
+          : data.map((item, index) => (
+              <Card
+                key={item.id}
+                data={item}
+                imageURL={imageURL}
+                index={index + 1}
+                trending={trending}
+                media_type={media_type}
+              />
+            ))}
       </div>
 
       {/* Navigation Buttons */}

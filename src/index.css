@@ -11,14 +11,24 @@ body{
 }
 
 @keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
+  to {
+    background-position-x: -200%;
   }
 }
 
-.animate-shimmer {
-  animation: shimmer 1.4s infinite linear;
+.shimmer-surface {
+  background: linear-gradient(
+    110deg,
+    rgb(38 38 38) 8%,
+    rgb(64 64 64) 18%,
+    rgb(38 38 38) 33%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-surface {
+    animation: none;
+  }
 }
